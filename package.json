@@ -41,7 +41,13 @@
       "plugin:vue/essential",
       "@vue/standard"
     ],
-    "rules": {},
+    "rules": {
+      "semi": [
+        "error",
+        "always"
+      ],
+      "space-before-function-paren": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }
