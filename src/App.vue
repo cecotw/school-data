@@ -1,6 +1,9 @@
 <template>
   <div id="app" class="bg-grey-lighter h-screen">
-    <v-nav></v-nav>
+    <v-nav :links="[
+      { text: 'School Data', to: '/' },
+      { text: 'About', to: '/about' }
+    ]"></v-nav>
     <router-view class="mt-8"/>
   </div>
 </template>

@@ -6,7 +6,7 @@
         <p class="text-left">Manage and export data for schools below</p>
       </div>
       <div class="flex-1">
-        <v-button>Add New School</v-button>
+        <v-button class="float-right">Add New School</v-button>
       </div>
     </div>
   </div>
