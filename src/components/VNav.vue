@@ -7,6 +7,7 @@
         <router-link v-for="(link, index) in links" :key="index" :to="link.to" class="block mt-4 lg:inline-block lg:mt-0 text-grey-darkest hover:text-blue-light mr-6 ml-6">
           {{link.text}}
         </router-link>
+        <a href="https://github.com/cecotw/school-data" target="_blank" class="text-sm px-4 py-2 leading-none border rounded text-grey-darker border-grey-darker no-underline hover:border-blue-light hover:text-blue-light hover:bg-white mt-4 lg:mt-0">Source Code</a>
       </div>
     </div>
   </nav>
