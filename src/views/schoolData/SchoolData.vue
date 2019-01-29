@@ -1,5 +1,5 @@
 <template>
-  <div class="home container mx-auto bg-white p-5">
+  <div class="home container mx-auto bg-white p-10">
     <school-data-table/>
   </div>
 </template>

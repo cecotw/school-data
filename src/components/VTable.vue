@@ -5,21 +5,25 @@
       <table class="w-full text-sm">
         <thead>
           <tr class="shadow font-bold">
-            <th v-if="includeSelectColumn" class="capitalize border-b border-r border-grey border-r- p-3 text-center">Edit</th>
+            <th v-if="includeSelectColumn" class="capitalize border-b border-r border-grey border-r- p-3 text-center cursor-pointer" @click="selectAllRows()">
+              <i class="fas fa-check-square text-blue-light" v-if="selectAll"></i>
+              <i class="far fa-square" v-else></i>
+            </th>
             <th class="capitalize border-b border-r border-grey p-3 text-left" v-for="(column, index) in displayColumns" :key="index">{{column | deunderscore}}</th>
             <th v-if="includeActionColumn" class="capitalize border-b border-grey p-3 text-center rounded-tr">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in value" :key="item.id">
-            <td v-if="includeSelectColumn" class="p-3 border-t border-r border-grey text-left" @click="$emit('editItem', item)">
-              <i class="fas fa-edit has-text-warning"></i>
+            <td v-if="includeSelectColumn" class="p-3 border-t border-r border-grey text-center cursor-pointer" @click="$emit('select', item)">
+              <i class="fas fa-check-square text-blue-light" v-if="item.isSelected"></i>
+              <i class="far fa-square" v-else></i>
             </td>
             <td v-for="column in displayColumns" class="p-3 border-t border-r border-grey text-left" :key="column.id">
               <slot :name="column" :data="item">{{item[column]}}</slot>
             </td>
-            <td v-if="includeActionColumn" class="p-3 border-t border-grey text-left" @click="$emit('deleteItem', item)">
-              <i class="fas fa-trash has-text-danger"></i>
+            <td v-if="includeActionColumn" class="p-3 border-t border-grey text-center" @click="$emit('deleteItem', item)">
+              <i class="fas fa-ellipsis-v text-blue-light cursor-pointer"></i>
             </td>
           </tr>
         </tbody>
@@ -35,7 +39,6 @@ import Vue from 'vue';
 export default Vue.component('vTable', {
   props: {
     value: Array,
-    title: String,
     columns: Array,
     columnsOrder: Array,
     includeSelectColumn: {
@@ -59,6 +62,10 @@ export default Vue.component('vTable', {
       });
       let nonSortableColumns = columns.slice().filter(r => !sortingArr.includes(r))
       return sortableColumns.concat(nonSortableColumns);
+    },
+    selectAllRows() {
+      this.selectAll = !this.selectAll;
+      this.$emit('selectAll', this.selectAll ? this.value : []);
     }
   },
   computed: {
@@ -74,6 +81,11 @@ export default Vue.component('vTable', {
       }
       return columns;
     }
+  },
+  data() {
+    return {
+      selectAll: false
+    };
   }
 });
 </script>

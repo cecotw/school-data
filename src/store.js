@@ -50,6 +50,9 @@ export default new Vuex.Store({
   mutations: {
     setApi (state, api) {
       state.api = api;
+    },
+    setSchools (state, schools) {
+      state.schools = schools;
     }
   },
   actions: {
