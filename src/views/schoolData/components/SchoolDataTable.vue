@@ -13,7 +13,8 @@
         </div>
         <div class="flex mt-3 mb-3">
           <div class="flex-1">
-            <v-button class="float-left" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white">
+            <!-- TODO add UI to sort on specified column, maybe a popover or something -->
+            <v-button class="float-left" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white" @click="sortRows('name')">
               <i class="fas fa-filter"></i>
             </v-button>
           </div>
@@ -51,8 +52,6 @@
 </template>
 
 <script>
-const json2csv = require('json2csv').parse;
-
 export default {
   async created() {
     this.isLoading = true;
@@ -153,6 +152,9 @@ export default {
         str += line + '\r\n';
       }
       return str;
+    },
+    sortRows(column) {
+      this.schools = this.$filters.sort(this.schools, column);
     }
   },
   computed: {
