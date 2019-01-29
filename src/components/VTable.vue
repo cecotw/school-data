@@ -1,31 +1,31 @@
 <template>
   <section>
     <slot name="header"/>
-    <div class="table-wrapper m-b-md" v-if="displayColumns.length > 0 && value">
-      <table class="table is-striped is-bordered is-fullwidth">
+    <div class="border border-grey rounded mt-5" v-if="displayColumns.length > 0 && value">
+      <table class="w-full text-sm">
         <thead>
-          <tr>
-            <!-- <th v-if="includeEdit" class="has-text-white has-background-dark is-capitalized has-text-centered">Edit</th> -->
-            <th class="has-text-white has-background-dark is-capitalized" v-for="(column, index) in displayColumns" :key="index">{{column | decamel}}</th>
-            <th v-if="includeDelete" class="has-text-white has-background-dark is-capitalized has-text-centered">Delete</th>
+          <tr class="shadow font-bold">
+            <th v-if="includeSelectColumn" class="capitalize border-b border-r border-grey border-r- p-3 text-center">Edit</th>
+            <th class="capitalize border-b border-r border-grey p-3 text-left" v-for="(column, index) in displayColumns" :key="index">{{column | deunderscore}}</th>
+            <th v-if="includeActionColumn" class="capitalize border-b border-grey p-3 text-center rounded-tr">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in value" :key="item.id">
-            <td v-if="includeEdit" class="is-clickable has-text-centered" @click="$emit('editItem', item)">
+            <td v-if="includeSelectColumn" class="p-3 border-t border-r border-grey text-left" @click="$emit('editItem', item)">
               <i class="fas fa-edit has-text-warning"></i>
             </td>
-            <td v-for="column in displayColumns" :key="column.id">
+            <td v-for="column in displayColumns" class="p-3 border-t border-r border-grey text-left" :key="column.id">
               <slot :name="column" :data="item">{{item[column]}}</slot>
             </td>
-            <td v-if="includeDelete" class="is-clickable has-text-centered" @click="$emit('deleteItem', item)">
+            <td v-if="includeActionColumn" class="p-3 border-t border-grey text-left" @click="$emit('deleteItem', item)">
               <i class="fas fa-trash has-text-danger"></i>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p v-else class="help is-size-6">{{noDataText}}</p>
+    <p v-else class="border border-grey mt-5 p-5 rounded">{{noDataText}}</p>
   </section>
 </template>
 
@@ -38,15 +38,11 @@ export default Vue.component('vTable', {
     title: String,
     columns: Array,
     columnsOrder: Array,
-    includeAdd: {
+    includeSelectColumn: {
       type: Boolean,
       default: false
     },
-    includeEdit: {
-      type: Boolean,
-      default: false
-    },
-    includeDelete: {
+    includeActionColumn: {
       type: Boolean,
       default: false
     },

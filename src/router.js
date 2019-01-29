@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import SchoolData from './views/SchoolData.vue';
+import SchoolData from './views/schoolData/SchoolData.vue';
 
 Vue.use(Router);
 
