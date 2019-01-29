@@ -52,6 +52,10 @@
 </template>
 
 <script>
+/**
+ * School Data Table displays various functionalities associated with
+ * the CRUD interface
+ */
 export default {
   async created() {
     this.isLoading = true;
@@ -59,11 +63,17 @@ export default {
     this.isLoading = false;
   },
   methods: {
+    /**
+     * Handles add school click by opening modal
+     */
     onAddSchoolClick() {
       this.school = {};
       this.modalTitle = 'Add New School';
       this.showSchoolDataModal = !this.showSchoolDataModal;
     },
+    /**
+     * Dispacthes event to create or update schools
+     */
     async saveItem() {
       this.isLoading = true;
       this.showSchoolDataModal = false;
@@ -74,6 +84,9 @@ export default {
       }
       this.isLoading = false;
     },
+    /**
+     * Handles select all event by selected or deselecting schools
+     */
     onSelectAllItems(items) {
       let schools = this.schools.map(school => {
         delete school.isSelected;
@@ -86,6 +99,9 @@ export default {
       });
       this.schools = schools;
     },
+    /**
+     * Handles selectedItem event
+     */
     onSelectItem(item) {
       let schools = this.schools.map(school => {
         if (item.id === school.id) {
@@ -99,16 +115,25 @@ export default {
       });
       this.schools = schools;
     },
+    /**
+     * Handles editItem event
+     */
     onEditItem(item) {
       this.school = item;
       this.modalTitle = 'Edit School';
       this.showSchoolDataModal = !this.showSchoolDataModal;
     },
+    /**
+     * Handles deleteItem event
+     */
     async onDeleteItem(itemId) {
       this.isLoading = true;
       await this.$store.dispatch('removeSchool', itemId);
       this.isLoading = false;
     },
+    /**
+     * Handles the deleting of multpile selected items
+     */
     async onDeleteSelectedItems() {
       this.isLoading = true;
       let itemIdsToRemove = this.schools.filter(school => {
@@ -120,6 +145,9 @@ export default {
       }));
       this.isLoading = false;
     },
+    /**
+     * Downloads a the CSV blob from the selected items in the table
+     */
     downloadCsv(){
       let selectedSchools = this.schools.filter(school => school.isSelected).map(school => {
         delete school.isSelected;
@@ -140,6 +168,10 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
+    /**
+     * Converts stringified JSON to a CSV string
+     * @param {object} objArray
+     */
     convertToCSV(objArray) {
       let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
       let str = '';
@@ -153,6 +185,10 @@ export default {
       }
       return str;
     },
+    /**
+     * Sorts the rows based on the specified column
+     * @param {string} column
+     */
     sortRows(column) {
       this.schools = this.$filters.sort(this.schools, column);
     }

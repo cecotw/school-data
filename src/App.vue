@@ -10,6 +10,9 @@
 
 <script>
 export default {
+  /**
+   * Initializes the API service globally for the app
+   */
   created() {
     this.$store.dispatch('initApi');
   }

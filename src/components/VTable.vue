@@ -44,6 +44,9 @@
 <script>
 import Vue from 'vue';
 
+/**
+ * dynamically builds out a CRUD table based on the data props of its model
+ */
 export default Vue.component('vTable', {
   props: {
     value: Array,
@@ -64,6 +67,9 @@ export default Vue.component('vTable', {
     isLoading: Boolean
   },
   methods: {
+    /**
+     * enables developers to set an order to the way the columns are displayed
+     */
     sortColumns(columns, sortingArr) {
       let sortableColumns = columns.slice().filter(r => sortingArr.includes(r));
       sortableColumns.sort(function(a, b){
@@ -72,6 +78,9 @@ export default Vue.component('vTable', {
       let nonSortableColumns = columns.slice().filter(r => !sortingArr.includes(r))
       return sortableColumns.concat(nonSortableColumns);
     },
+    /**
+     * emits event that all rows have been selected
+     */
     selectAllRows() {
       this.selectAll = !this.selectAll;
       this.$emit('selectAll', this.selectAll ? this.value : []);
