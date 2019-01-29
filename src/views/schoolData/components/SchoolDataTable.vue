@@ -1,6 +1,6 @@
 <template>
   <section>
-    <v-table v-model="schools" :columns="['school_name', 'city', 'state', 'zip_code']" :includeSelectColumn="true" :includeActionColumn="true" @selectAll="onSelectAllItems($event)" @select="onSelectItem($event)" :isLoading="isLoading">
+    <v-table v-model="schools" :columns="['school_name', 'city', 'state', 'zip_code']" :includeSelectColumn="true" :includeActionColumn="true" @selectAll="onSelectAllItems($event)" @select="onSelectItem($event)" @editItem="onEditItem($event)" @removeItem="onDeleteItem($event.id)" :isLoading="isLoading">
       <section slot="header">
         <div class="flex">
           <div class="flex-1">
@@ -18,7 +18,7 @@
             </v-button>
           </div>
           <div class="flex-1">
-            <v-button class="float-right" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white">
+            <v-button class="float-right" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white" @click="downloadCsv()">
               <i class="fas fa-file-export"></i>
             </v-button>
             <v-button class="float-right mr-3" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white" @click="onDeleteSelectedItems()">
@@ -31,10 +31,11 @@
     </v-table>
     <v-modal :showModal="showSchoolDataModal" @close="showSchoolDataModal = false">
       <section slot="header" class="bg-grey text-sm rounded-t pt-2 pb-2 font-bold">
-        Add New School
+        {{modalTitle}}
       </section>
       <section>
         <form class="bg-white px-8 pt-6 pb-8 mb-4">
+          <!-- TODO input validation and error handling -->
           <v-input field="schoolName" v-model="school.name"></v-input>
           <v-input field="city" v-model="school.city"></v-input>
           <v-input field="state" v-model="school.state"></v-input>
@@ -42,14 +43,16 @@
         </form>
       </section>
       <section slot="footer" class="flex">
-        <div class="text-sm flex-1 rounded-bl text-grey-darker cursor-pointer py-5 border-t border-r border-grey font-bold hover:bg-grey hover:text-white">Cancel</div>
-        <div class="bg-blue-light flex-1 py-5 text-white cursor-pointer hover:bg-blue rounded-br text-sm rounded-bl border-t border-r border-grey font-bold" @click="createItem()">Save</div>
+        <div class="text-sm flex-1 rounded-bl text-grey-darker cursor-pointer py-5 border-t border-r border-grey font-bold hover:bg-grey hover:text-white" @click="showSchoolDataModal = !showSchoolDataModal">Cancel</div>
+        <div class="bg-blue-light flex-1 py-5 text-white cursor-pointer hover:bg-blue rounded-br text-sm rounded-bl border-t border-r border-grey font-bold" @click="saveItem()">Save</div>
       </section>
     </v-modal>
   </section>
 </template>
 
 <script>
+const json2csv = require('json2csv').parse;
+
 export default {
   async created() {
     this.isLoading = true;
@@ -59,12 +62,17 @@ export default {
   methods: {
     onAddSchoolClick() {
       this.school = {};
+      this.modalTitle = 'Add New School';
       this.showSchoolDataModal = !this.showSchoolDataModal;
     },
-    async createItem() {
+    async saveItem() {
       this.isLoading = true;
       this.showSchoolDataModal = false;
-      await this.$store.dispatch('createSchool', this.school);
+      if (this.school.id) {
+        await this.$store.dispatch('updateSchool', this.school);
+      } else {
+        await this.$store.dispatch('createSchool', this.school);
+      }
       this.isLoading = false;
     },
     onSelectAllItems(items) {
@@ -92,6 +100,16 @@ export default {
       });
       this.schools = schools;
     },
+    onEditItem(item) {
+      this.school = item;
+      this.modalTitle = 'Edit School';
+      this.showSchoolDataModal = !this.showSchoolDataModal;
+    },
+    async onDeleteItem(itemId) {
+      this.isLoading = true;
+      await this.$store.dispatch('removeSchool', itemId);
+      this.isLoading = false;
+    },
     async onDeleteSelectedItems() {
       this.isLoading = true;
       let itemIdsToRemove = this.schools.filter(school => {
@@ -103,8 +121,38 @@ export default {
       }));
       this.isLoading = false;
     },
-    async onDeleteItem(itemId) {
-      await this.$store.dispatch('removeSchool', itemId);
+    downloadCsv(){
+      let selectedSchools = this.schools.filter(school => school.isSelected).map(school => {
+        delete school.isSelected;
+        delete school.id;
+        return school;
+      });
+      if (!selectedSchools) { return; } // TODO add help message that user needs to select school
+      let jsonObject = JSON.stringify(selectedSchools);
+      let csv = this.convertToCSV(jsonObject);
+      let exportedFilenmae = 'myschools.csv';
+      let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      var link = document.createElement("a");
+      var url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", exportedFilenmae);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    convertToCSV(objArray) {
+      let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+      let str = '';
+      for (var i = 0; i < array.length; i++) {
+        var line = '';
+        for (var index in array[i]) {
+          if (line != '') line += ','
+          line += array[i][index];
+        }
+        str += line + '\r\n';
+      }
+      return str;
     }
   },
   computed: {
@@ -134,6 +182,7 @@ export default {
     return {
       isLoading: null,
       showSchoolDataModal: null,
+      modalTitle: 'Add New School',
       school: {}
     };
   }

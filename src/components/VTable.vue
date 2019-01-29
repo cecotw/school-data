@@ -25,8 +25,13 @@
             <td v-for="column in displayColumns" class="p-3 border-t border-r border-grey text-left" :key="column.id">
               <slot :name="column" :data="item">{{item[column]}}</slot>
             </td>
-            <td v-if="includeActionColumn" class="p-3 border-t border-grey text-center" @click="$emit('deleteItem', item)">
-              <i class="fas fa-ellipsis-v text-blue-light cursor-pointer"></i>
+            <td v-if="includeActionColumn" class="p-3 relative border-t border-grey text-center cursor-pointer" @click="item.showPopover = !item.showPopover">
+              <i class="fas fa-ellipsis-v text-blue-light"></i>
+              <a href="javascript:void(0);" class="m-1 text-grey-darker no-underline" @click="$emit('editItem', item)">Edit</a>
+              <a href="javascript:void(0);" class="m-1 text-grey-darker no-underline" @click="$emit('removeItem', item)">Delete</a>
+              <!-- TODO shove in popover and build working popover -->
+              <!-- <v-popover :show="item.showPopover">
+              </v-popover> -->
             </td>
           </tr>
         </tbody>
