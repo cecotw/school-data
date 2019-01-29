@@ -35,12 +35,15 @@ export class ApiService {
       // Third party sites should not recieve token
       token = null;
     }
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+    if (token) {
+      headers.setHeader('Authorization', token);
+    }
     return fetch(url, Object.assign({
       body: JSON.stringify(data),
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        'Authorization': token
-      }),
+      headers: headers,
       method: verb
     }, init))
       .then(response => {
@@ -65,11 +68,14 @@ export class ApiService {
       // Third party sites should not recieve token
       token = null;
     }
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+    if (token) {
+      headers.setHeader('Authorization', token);
+    }
     return fetch(url, Object.assign({
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        'Authorization': token
-      }),
+      headers: headers,
       method: 'GET'
     }, init))
       .then(response => {

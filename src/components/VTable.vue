@@ -1,7 +1,7 @@
 <template>
   <section>
     <slot name="header"/>
-    <div class="border border-grey rounded mt-5" v-if="displayColumns.length > 0 && value">
+    <div class="border border-grey rounded" v-if="displayColumns.length > 0 && value">
       <table class="w-full text-sm">
         <thead>
           <tr class="shadow font-bold">
@@ -14,7 +14,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in value" :key="item.id">
+          <tr v-for="item in value" :key="item.id" :class="{
+            'bg-grey-light': item.isSelected
+          }">
             <td v-if="includeSelectColumn" class="p-3 border-t border-r border-grey text-center cursor-pointer" @click="$emit('select', item)">
               <i class="fas fa-check-square text-blue-light" v-if="item.isSelected"></i>
               <i class="far fa-square" v-else></i>
