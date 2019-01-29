@@ -1,6 +1,5 @@
 <template>
-  <v-loading v-if="isLoading"></v-loading>
-  <v-table v-else v-model="schools" :columns="['school_name', 'city', 'state', 'zip_code']" :includeSelectColumn="true" :includeActionColumn="true" @selectAll="onSelectAllItems($event)" @select="onSelectItem($event)">
+  <v-table v-model="schools" :columns="['school_name', 'city', 'state', 'zip_code']" :includeSelectColumn="true" :includeActionColumn="true" @selectAll="onSelectAllItems($event)" @select="onSelectItem($event)" :isLoading="isLoading">
     <section slot="header">
       <div class="flex">
         <div class="flex-1">
@@ -21,7 +20,7 @@
           <v-button class="float-right" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white">
             <i class="fas fa-file-export"></i>
           </v-button>
-          <v-button class="float-right mr-3" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white">
+          <v-button class="float-right mr-3" color="white" textColor="grey-darker" borderColor="grey" hoverColor="grey-dark" hoverTextColor="white" @click="onDeleteSelectedItems()">
             <i class="far fa-trash-alt"></i>
           </v-button>
           <span class="flex float-right text-blue-light mr-3 mt-3 text-sm font-bold" v-if="selectedCount > 0">{{selectedCount}} selected</span>
@@ -63,6 +62,19 @@ export default {
         return school;
       });
       this.schools = schools;
+    },
+    async onDeleteSelectedItems() {
+      this.isLoading = true;
+      let itemIdsToRemove = this.schools.filter(school => {
+        return school.isSelected;
+      }).map(i => i.id);
+      await Promise.all(itemIdsToRemove.map(itemId => {
+        return this.onDeleteItem(itemId)
+      }));
+      this.isLoading = false;
+    },
+    async onDeleteItem(itemId) {
+      await this.$store.dispatch('removeSchool', itemId);
     }
   },
   computed: {

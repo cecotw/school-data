@@ -1,7 +1,8 @@
 <template>
   <section>
     <slot name="header"/>
-    <div class="border border-grey rounded" v-if="displayColumns.length > 0 && value">
+    <v-loading v-if="isLoading"></v-loading>
+    <div class="border border-grey rounded" v-else-if="displayColumns.length > 0 && value">
       <table class="w-full text-sm">
         <thead>
           <tr class="shadow font-bold">
@@ -54,7 +55,8 @@ export default Vue.component('vTable', {
     noDataText: {
       type: String,
       default: 'There are no items in this dataset.'
-    }
+    },
+    isLoading: Boolean
   },
   methods: {
     sortColumns(columns, sortingArr) {

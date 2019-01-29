@@ -1,5 +1,5 @@
 <template>
-  <button class="py-2 px-2 rounded" :class="{
+  <button @click="$emit('click')" class="py-2 px-2 rounded" :class="{
     [`bg-${color}`]: color,
     [`border border-${borderColor}`]: borderColor,
     [`text-${textColor}`]: textColor,
