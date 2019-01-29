@@ -26,10 +26,10 @@
               <slot :name="column" :data="item">{{item[column]}}</slot>
             </td>
             <td v-if="includeActionColumn" class="p-3 relative border-t border-grey text-center cursor-pointer" @click="item.showPopover = !item.showPopover">
-              <i class="fas fa-ellipsis-v text-blue-light"></i>
               <a href="javascript:void(0);" class="m-1 text-grey-darker no-underline" @click="$emit('editItem', item)">Edit</a>
               <a href="javascript:void(0);" class="m-1 text-grey-darker no-underline" @click="$emit('removeItem', item)">Delete</a>
               <!-- TODO shove in popover and build working popover -->
+              <!-- <i class="fas fa-ellipsis-v text-blue-light"></i> -->
               <!-- <v-popover :show="item.showPopover">
               </v-popover> -->
             </td>
