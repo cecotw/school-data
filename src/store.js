@@ -29,6 +29,11 @@ export default new Vuex.Store({
       commit('setSchools', res);
       return res;
     },
+    async createSchool ({ state, dispatch }, school) {
+      await state.api.$post('/interview_schools/', school);
+      const res = await dispatch('getSchools');
+      return res;
+    },
     async removeSchool ({ state, dispatch }, schoolId) {
       await state.api.$delete(`/interview_schools/${schoolId}`);
       const res = await dispatch('getSchools');
