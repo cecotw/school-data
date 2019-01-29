@@ -22,7 +22,7 @@ View the full documentation at https://tailwindcss.com.
 | values with some of the Tailwind defaults.
 |
 */
-
+// eslint-disable-next-line no-unused-vars
 let defaultConfig = require('tailwindcss/defaultConfig')();
 
 /*

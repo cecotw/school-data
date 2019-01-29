@@ -16,7 +16,7 @@ export default {
   created() {
     this.$store.dispatch('initApi');
   }
-}
+};
 </script>
 
 <style lang="scss">

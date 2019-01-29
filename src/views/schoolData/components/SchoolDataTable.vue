@@ -105,7 +105,7 @@ export default {
     onSelectItem(item) {
       let schools = this.schools.map(school => {
         if (item.id === school.id) {
-          if(item.isSelected) {
+          if (item.isSelected) {
             delete school.isSelected;
           } else {
             school.isSelected = true;
@@ -139,16 +139,16 @@ export default {
       let itemIdsToRemove = this.schools.filter(school => {
         return school.isSelected;
       }).map(i => i.id);
-      if(!itemIdsToRemove) { return; }
+      if (!itemIdsToRemove) { return; }
       await Promise.all(itemIdsToRemove.map(itemId => {
-        return this.onDeleteItem(itemId)
+        return this.onDeleteItem(itemId);
       }));
       this.isLoading = false;
     },
     /**
      * Downloads a the CSV blob from the selected items in the table
      */
-    downloadCsv(){
+    downloadCsv() {
       let selectedSchools = this.schools.filter(school => school.isSelected).map(school => {
         delete school.isSelected;
         delete school.id;
@@ -159,10 +159,10 @@ export default {
       let csv = this.convertToCSV(jsonObject);
       let exportedFilenmae = 'myschools.csv';
       let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      var link = document.createElement("a");
+      var link = document.createElement('a');
       var url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute("download", exportedFilenmae);
+      link.setAttribute('href', url);
+      link.setAttribute('download', exportedFilenmae);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
@@ -173,12 +173,12 @@ export default {
      * @param {object} objArray
      */
     convertToCSV(objArray) {
-      let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+      let array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
       let str = '';
       for (var i = 0; i < array.length; i++) {
         var line = '';
         for (var index in array[i]) {
-          if (line != '') line += ','
+          if (line !== '') line += ',';
           line += array[i][index];
         }
         str += line + '\r\n';
@@ -224,5 +224,5 @@ export default {
       school: {}
     };
   }
-}
+};
 </script>

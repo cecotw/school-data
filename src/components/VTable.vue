@@ -72,10 +72,10 @@ export default Vue.component('vTable', {
      */
     sortColumns(columns, sortingArr) {
       let sortableColumns = columns.slice().filter(r => sortingArr.includes(r));
-      sortableColumns.sort(function(a, b){
+      sortableColumns.sort(function(a, b) {
         return sortingArr.indexOf(a) - sortingArr.indexOf(b);
       });
-      let nonSortableColumns = columns.slice().filter(r => !sortingArr.includes(r))
+      let nonSortableColumns = columns.slice().filter(r => !sortingArr.includes(r));
       return sortableColumns.concat(nonSortableColumns);
     },
     /**

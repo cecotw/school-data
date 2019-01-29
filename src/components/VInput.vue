@@ -17,7 +17,7 @@ export default Vue.component('vInput', {
       get () { return this.value; },
       set (value) { this.$emit('input', value); }
     }
-  },
+  }
 });
 </script>
 
